@@ -1,0 +1,10 @@
+bin/
+obj/
+*.user
+.vs/
+# Local path to the game install — never commit
+GameFolder.props
+# Game binaries are copyrighted — never commit
+Assembly-CSharp*.dll
+decompiled/
+lib/

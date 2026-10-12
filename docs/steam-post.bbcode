@@ -1,0 +1,37 @@
+[h1]MdsBuildTools: grid snapping, alignment, floor fix & exact wall lengths (open-source mod, WIP)[/h1]
+
+Hey everyone! Like a lot of you in the [i]Grid Snapping[/i] threads, I kept fighting with furniture that wouldn't line up, objects sinking into the floor, and walls that only come in 1 m steps. So I'm building a free, open-source mod to fix that.
+
+[h2]What it does[/h2]
+[list]
+[*][b]Grid snapping[/b]: position snaps to a grid (default 5 cm) and rotation to steps (default 15°). Both are configurable.
+[*][b]Alignment[/b]: edges and centres line up with nearby objects and walls automatically.
+[*][b]Keep above floor[/b]: objects that sink into the floor get pushed back up onto the surface.
+[*][b]Exact wall lengths[/b]: type [i]3.47[/i], [i]347cm[/i] or [i]3470 mm[/i] instead of being stuck with 1 m walls.
+[/list]
+
+[h2]Every feature can be toggled[/h2]
+[list]
+[*][b]G[/b]: grid snapping on/off
+[*][b]H[/b]: alignment on/off
+[*][b]J[/b]: floor fix on/off
+[*]Hold [b]Left Alt[/b]: place freely (no snapping or alignment) while held
+[/list]
+All keys can be rebound. If you have [b]ModSettingsAPI[/b] installed there's also an in-game settings tab, and otherwise there's a config file.
+
+[h2]Status[/h2]
+[b]Early work in progress.[/b] The settings, hotkeys and the snapping/alignment math are done and tested. Hooking them into the game's placement and wall code is next. I'll update this thread when there's a release you can actually use.
+
+[h2]Install (once released)[/h2]
+[olist]
+[*]Install BepInExPack via [url=https://thunderstore.io/c/my-dream-setup/]Thunderstore[/url] (r2modman or Gale)
+[*](Optional) Install ModSettingsAPI for the in-game menu
+[*]Drop [i]MdsBuildTools.dll[/i] into [i]BepInEx/plugins[/i]
+[/olist]
+
+[h2]Source / downloads[/h2]
+[url=https://github.com/miguelneves01/MdsBuildTools]github.com/miguelneves01/MdsBuildTools[/url] (MIT licence)
+
+Feedback welcome! What other building tools would you want? Measurement tape? Copy/paste with exact offsets? Let me know below.
+
+[i]Not affiliated with the developers. Mods are used at your own risk, so back up your saves.[/i]

@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <AssemblyName>MdsBuildTools</AssemblyName>
+    <RootNamespace>MdsBuildTools</RootNamespace>
+    <Version>0.1.0</Version>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <RestoreAdditionalProjectSources>https://nuget.bepinex.dev/v3/index.json</RestoreAdditionalProjectSources>
+  </PropertyGroup>
+
+  <!-- ModSettingsAPI has no licence, so it is not redistributed: fetched from Thunderstore before build. -->
+  <PropertyGroup>
+    <LibDir>$(MSBuildThisFileDirectory)..\..\lib\</LibDir>
+    <ModSettingsApiUrl>https://thunderstore.io/package/download/Endskill/ModSettingsAPI/1.0.0/</ModSettingsApiUrl>
+  </PropertyGroup>
+  <Target Name="FetchModSettingsApi" BeforeTargets="ResolveAssemblyReferences" Condition="!Exists('$(LibDir)ModSettingsApi.dll')">
+    <DownloadFile SourceUrl="$(ModSettingsApiUrl)" DestinationFolder="$(LibDir)" DestinationFileName="ModSettingsAPI.zip" />
+    <Unzip SourceFiles="$(LibDir)ModSettingsAPI.zip" DestinationFolder="$(LibDir)ModSettingsAPI" />
+    <Copy SourceFiles="$(LibDir)ModSettingsAPI\ModSettingsApi.dll" DestinationFolder="$(LibDir)" />
+  </Target>
+
+  <!-- Optional local override: GameFolder.props sets $(GameFolder) to the MDS install (gitignored). -->
+  <Import Project="GameFolder.props" Condition="Exists('GameFolder.props')" />
+  <PropertyGroup>
+    <ManagedFolder>$(GameFolder)\MDS_Data\Managed</ManagedFolder>
+    <HasGame Condition="'$(GameFolder)' != '' and Exists('$(ManagedFolder)')">true</HasGame>
+  </PropertyGroup>
+
+  <!-- Core logic is compiled into the plugin DLL so users install a single file. -->
+  <ItemGroup>
+    <Compile Include="..\MdsBuildTools.Core\**\*.cs" Exclude="..\MdsBuildTools.Core\obj\**;..\MdsBuildTools.Core\bin\**" LinkBase="Core" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all" />
+    <Reference Include="ModSettingsApi" HintPath="$(LibDir)ModSettingsApi.dll" Private="false" />
+  </ItemGroup>
+
+  <!-- Without the game: compile against stock Unity modules. With the game: use its own (publicized) DLLs. -->
+  <ItemGroup Condition="'$(HasGame)' != 'true'">
+    <PackageReference Include="UnityEngine.Modules" Version="2022.3.21" IncludeAssets="compile" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(HasGame)' == 'true'">
+    <Reference Include="$(ManagedFolder)\UnityEngine*.dll" Private="false" />
+    <Reference Include="$(ManagedFolder)\Unity.*.dll" Private="false" />
+    <Reference Include="$(ManagedFolder)\Assembly-CSharp_publicized.dll" Private="false" Condition="Exists('$(ManagedFolder)\Assembly-CSharp_publicized.dll')" />
+    <Reference Include="$(ManagedFolder)\Assembly-CSharp.dll" Private="false" Condition="!Exists('$(ManagedFolder)\Assembly-CSharp_publicized.dll')" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(HasGame)' == 'true'">
+    <DefineConstants>$(DefineConstants);HAS_GAME</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+</Project>
