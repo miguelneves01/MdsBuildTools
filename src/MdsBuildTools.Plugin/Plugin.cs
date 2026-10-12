@@ -63,6 +63,15 @@ namespace MdsBuildTools
 
         private void OnDestroy() => _harmony.UnpatchSelf();
 
+        private static readonly System.Collections.Generic.HashSet<string> LoggedErrors = new System.Collections.Generic.HashSet<string>();
+
+        /// <summary>Logs an exception from a per-frame hook only once, to avoid flooding the log.</summary>
+        internal static void LogOnce(string where, System.Exception e)
+        {
+            if (LoggedErrors.Add(where))
+                Log.LogError($"{where}: {e}");
+        }
+
         private static void TryRegisterSettingsMenu()
         {
             if (!BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(ModSettingsApiGuid))
