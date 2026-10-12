@@ -30,13 +30,11 @@ namespace MdsBuildTools
         public Feature Grid { get; }
         public Feature Align { get; }
         public Feature Floor { get; }
-        public Feature Walls { get; }
         public IReadOnlyList<Feature> Features { get; }
 
         public ConfigEntry<float> GridStepCm { get; }
         public ConfigEntry<float> AngleStepDeg { get; }
         public ConfigEntry<float> AlignThresholdCm { get; }
-        public ConfigEntry<KeyCode> WallLengthKey { get; }
         public ConfigEntry<KeyCode> BypassKey { get; }
         public ConfigEntry<bool> ShowToggleToasts { get; }
 
@@ -60,15 +58,11 @@ namespace MdsBuildTools
                 cfg.Bind("Floor", "Enabled", true, "Push objects that sink into the floor back onto its surface."),
                 cfg.Bind("Floor", "ToggleKey", KeyCode.J, "Toggle floor correction on/off."));
 
-            Walls = new Feature("Exact wall lengths",
-                cfg.Bind("Walls", "Enabled", true, "Allow typing exact wall lengths instead of 1 m steps."),
-                cfg.Bind("Walls", "ToggleKey", KeyCode.None, "Toggle exact wall lengths on/off (unbound by default)."));
-            WallLengthKey = cfg.Bind("Walls", "LengthKey", KeyCode.L, "Open the wall length input while editing a wall.");
 
             BypassKey = cfg.Bind("General", "BypassKey", KeyCode.LeftAlt, "Hold to temporarily disable grid snapping and alignment.");
             ShowToggleToasts = cfg.Bind("General", "ShowToggleToasts", true, "Show a short on-screen message when a feature is toggled.");
 
-            Features = new[] { Grid, Align, Floor, Walls };
+            Features = new[] { Grid, Align, Floor };
         }
 
         public float GridStepMetres => GridStepCm.Value / 100f;

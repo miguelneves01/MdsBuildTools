@@ -19,7 +19,6 @@ namespace MdsBuildTools
                 Toggle(cfg.Align),
                 FloatBox("Alignment distance (cm)", cfg.AlignThresholdCm),
                 Toggle(cfg.Floor),
-                Toggle(cfg.Walls),
                 new ToggleButtonVariant("Show toggle messages", v => cfg.ShowToggleToasts.Value = v, cfg.ShowToggleToasts.Value),
             });
 
